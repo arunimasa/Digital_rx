@@ -6,26 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('templates', function (Blueprint $table) {
+        Schema::create('prescription_templates', function (Blueprint $table) {
             $table->id();
             $table->foreignId('doctor_id')->constrained('users')->cascadeOnDelete();
-            $table->string('name');
-            $table->json('medicines')->nullable();
+            $table->string('name', 150);
+            $table->text('complaints')->nullable();
+            $table->text('diagnosis')->nullable();
             $table->text('advice')->nullable();
+            $table->boolean('is_shared')->default(false);
             $table->timestamps();
+
+            $table->index(['doctor_id', 'name']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('templates');
+        Schema::dropIfExists('prescription_templates');
     }
 };
