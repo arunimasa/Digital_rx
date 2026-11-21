@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DoctorProfileController;
 
 Route::get('/', fn () => redirect()->route('login'));
 
@@ -26,14 +27,17 @@ Route::middleware(['auth', 'active'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'active', 'role:doctor,admin'])->group(function () {
+    // Routes shared by doctors and admins go here (medicines, prescriptions…)
+});
 
-    // --- Step 3: Doctor profile ---
-    // Route::get('/doctor-profile', [DoctorProfileController::class, 'edit'])->name('doctor-profile.edit');
-    // Route::put('/doctor-profile', [DoctorProfileController::class, 'update'])->name('doctor-profile.update');
-
-    // --- Steps 7-9: Prescriptions and templates ---
-    // Route::resource('prescriptions', PrescriptionController::class);
-    // Route::resource('templates', PrescriptionTemplateController::class);
+/*
+|--------------------------------------------------------------------------
+| Doctor only
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'active', 'role:doctor'])->group(function () {
+    Route::get('/doctor-profile', [DoctorProfileController::class, 'edit'])->name('doctor-profile.edit');
+    Route::put('/doctor-profile', [DoctorProfileController::class, 'update'])->name('doctor-profile.update');
 });
 
 /*
@@ -45,12 +49,13 @@ Route::middleware(['auth', 'active', 'role:admin'])->prefix('admin')->name('admi
 
     Route::resource('users', UserController::class)->except(['show', 'destroy']);
 
-    // Disable/enable a user instead of deleting (add a toggleActive method to UserController)
-    // Route::patch('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
+    Route::patch('users/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
 
     // --- Step 6: Medicines (uncomment after MedicineController is created) ---
     // Route::resource('medicines', MedicineController::class)->except(['show']);
     // Route::post('medicines/import', [MedicineImportController::class, 'store'])->name('medicines.import');
+
+    
 });
 
 require __DIR__.'/auth.php';

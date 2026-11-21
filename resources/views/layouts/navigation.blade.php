@@ -80,6 +80,16 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if (auth()->user()->hasRole('admin'))
+            <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
+                {{ __('Users') }}
+            </x-responsive-nav-link>
+            @endif
+            @if (auth()->user()->hasRole('doctor'))
+            <x-responsive-nav-link :href="route('doctor-profile.edit')" :active="request()->routeIs('doctor-profile.*')">
+                {{ __('My doctor profile') }}
+            </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

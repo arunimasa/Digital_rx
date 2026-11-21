@@ -7,6 +7,13 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if (auth()->user()->hasRole('doctor') && ! auth()->user()->doctorProfile)
+            <div class="mb-4 p-4 rounded bg-yellow-100 text-yellow-800">
+                Your doctor profile is incomplete.
+                <a href="{{ route('doctor-profile.edit') }}" class="underline font-semibold">Complete it now</a>
+            </div>
+            @endif
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
@@ -14,4 +21,5 @@
             </div>
         </div>
     </div>
+
 </x-app-layout>
